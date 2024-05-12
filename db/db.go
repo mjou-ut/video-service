@@ -8,11 +8,11 @@ import (
 
 var DB = make(map[string]video.Video)
 
-func GetVideo(id string) (video.Video, error) {
-	if _, ok := DB[id]; !ok {
-		return video.Video{}, fmt.Errorf("video not found")
+func GetVideo(id string) (*video.Video, error) {
+	if v, found := DB[id]; found {
+		return &v, nil
 	}
-	return DB[id], nil
+	return nil, fmt.Errorf("video not found")
 }
 
 func GetVideos() []video.Video {
@@ -21,7 +21,7 @@ func GetVideos() []video.Video {
 	for _, v := range DB {
 		v.Tasks = nil
 		videos = append(videos, v)
-		// max 10 videos
+		// max 100 videos
 		if index > 100 {
 			break
 		}
